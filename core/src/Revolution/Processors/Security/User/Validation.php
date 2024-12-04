@@ -75,7 +75,7 @@ class Validation
             [
                 'username' => $name,
                 'id:!=' => $this->user->get('id'),
-                                     ]
+            ]
         ) > 0;
     }
 
