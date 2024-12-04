@@ -87,7 +87,7 @@
       display: none;
     }
     #user-username {
-      white-space: nowrap; 
+      white-space: nowrap;
       overflow: hidden;
       max-width: 7ch;
       text-overflow: ellipsis;
@@ -108,7 +108,7 @@
     margin: 0;
     padding: 0;
 
-    .top:not(#modx-manager-search-icon) {
+    > li {
       border-top: 1px solid $navbarBorder;
     }
 

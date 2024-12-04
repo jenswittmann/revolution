@@ -179,17 +179,16 @@ class TopMenu
                 $description = '<span class="description">'.$menu['description'].'</span>'."\n";
             }
 
-            $top = !empty($menu['children']) ? ' top' : '';
             $position = $idx <= 2 && $placeholder == 'navb' ? 'down' : 'up';
 
-            $menuTpl = '<li id="limenu-'.$menu['id'].'"class="menu-'.$position.$top.'">'."\n";
+            $menuTpl = '<li id="limenu-'.$menu['id'].'"class="menu-'.$position.' top">'."\n";
             if (!empty($menu['action'])) {
                 if ($menu['namespace'] != 'core') {
                     // Handle the namespace
                     $menu['action'] .= '&namespace='.$menu['namespace'];
                 }
                 $onclick = (!empty($menu['handler'])) ? ' onclick="'.str_replace('"','\'',$menu['handler']).'"' : '';
-                $menuTpl .= '<a href="?a='.$menu['action'].$menu['params'].'"'.( $top ? ' class="top-link"': '' ).$onclick.$title.$ariaLabel.'>'.$label.$description.'</a>'."\n";
+                $menuTpl .= '<a href="?a=' . $menu['action'] . $menu['params'] . '"' . $onclick . $title . $ariaLabel . '>' . $label . $description . '</a>' . "\n";
             } elseif (!empty($menu['handler'])) {
                 $menuTpl .= '<a href="javascript:;" onclick="'.str_replace('"','\'',$menu['handler']).'"'.$title.$ariaLabel.'>'.$label.$description.'</a>'."\n";
             } else {
