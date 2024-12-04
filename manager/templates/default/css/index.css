@@ -23320,7 +23320,7 @@ ul.x-tab-strip-bottom .x-tab-left {
     margin: 0;
     padding: 0;
 }
-#modx-navbar #modx-topnav .top:not(#modx-manager-search-icon) {
+#modx-navbar #modx-topnav > li {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 #modx-navbar #modx-topnav > li:not(#modx-home-dashboard):not(#modx-manager-search-icon):not(#modx-leftbar-trigger) > a {

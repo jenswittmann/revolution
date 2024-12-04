@@ -455,48 +455,50 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
         var position = window.innerWidth <= 960 ? 'bottom' : 'right';
         for (var i = 0; i < buttons.length; i++) {
             var submenu = document.getElementById(buttons[i].id + '-submenu');
-            new Popper(buttons[i], submenu, {
-                placement: position,
-                modifiers: {
-                    arrow: {
-                        element: submenu.getElementsByClassName('modx-subnav-arrow')[0]
-                    },
-                    flip: {
-                        enabled: false
-                    },
-                    applyStyle: {
-                        enabled: true,
-                        fn: function(data) {
-                            for (var i in data.offsets.popper) {
-                                if (i !== 'bottom' && i !== 'right') {
-                                    if (data.offsets.popper.hasOwnProperty(i)) {
-                                        data.instance.popper.style[i] = !isNaN(parseFloat(data.offsets.popper[i]))
-                                            ? data.offsets.popper[i] + 'px'
-                                            : data.offsets.popper[i];
+            if (submenu) {
+                new Popper(buttons[i], submenu, {
+                    placement: position,
+                    modifiers: {
+                        arrow: {
+                            element: submenu.getElementsByClassName('modx-subnav-arrow')[0]
+                        },
+                        flip: {
+                            enabled: false
+                        },
+                        applyStyle: {
+                            enabled: true,
+                            fn: function (data) {
+                                for (var i in data.offsets.popper) {
+                                    if (i !== 'bottom' && i !== 'right') {
+                                        if (data.offsets.popper.hasOwnProperty(i)) {
+                                            data.instance.popper.style[i] = !isNaN(parseFloat(data.offsets.popper[i]))
+                                                ? data.offsets.popper[i] + 'px'
+                                                : data.offsets.popper[i];
+                                        }
+                                    }
+                                    if (data.offsets.arrow.top !== '') {
+                                        data.arrowElement.style.top = data.offsets.arrow.top + 'px';
+                                    }
+                                    if (data.offsets.arrow.left) {
+                                        data.arrowElement.style.left = data.offsets.arrow.left + 'px';
                                     }
                                 }
-                                if (data.offsets.arrow.top !== '') {
-                                    data.arrowElement.style.top = data.offsets.arrow.top + 'px';
-                                }
-                                if (data.offsets.arrow.left) {
-                                    data.arrowElement.style.left = data.offsets.arrow.left + 'px';
-                                }
                             }
+                        },
+                        preventOverflow: {
+                            boundariesElement: document.getElementById('modx-container'),
+                            priority: position === 'right'
+                                ? ['bottom', 'top']
+                                : ['left', 'right']
                         }
-                    },
-                    preventOverflow: {
-                        boundariesElement: document.getElementById('modx-container'),
-                        priority: position === 'right'
-                            ? ['bottom','top']
-                            : ['left','right']
                     }
-                }
-            });
-            buttons[i].addEventListener('click', function(e) {
-                e.stopPropagation();
-                el.focusRestoreEls.push(this.querySelectorAll('a')[0]);
-                el.showMenu(this);
-            });
+                });
+                buttons[i].addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    el.focusRestoreEls.push(this.querySelectorAll('a')[0]);
+                    el.showMenu(this);
+                });
+            }
         }
         window.addEventListener('click', function() {
             el.hideMenu();
