@@ -62,14 +62,9 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
     ,splitBarMargin: 8
 
     /**
-     * @property {Array} focusRestoreEls - Set Focus back on the last Element in array on close
+     * @property {Object} focusRestoreEl - Set Focus back on the this Element
      */
-    ,focusRestoreEls: []
-
-    /**
-     * @property {bool} subNavOpen - Check if Subnav is opened
-     */
-    ,subNavOpen: false
+    ,focusRestoreEl: []
 
     /**
      * @property {Function} getSplitBarMargin - Utility getter for splitBarMargin
@@ -493,9 +488,9 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                         }
                     }
                 });
-                buttons[i].addEventListener('click', function (e) {
+                buttons[i].addEventListener('click', function(e) {
                     e.stopPropagation();
-                    el.focusRestoreEls.push(this.querySelectorAll('a')[0]);
+                    el.focusRestoreEl = this.querySelectorAll('a')[0];
                     el.showMenu(this);
                 });
             }
@@ -523,22 +518,18 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                 firstFocusEl.focus();
             }, 50);
             var focusRestore = (e) => {
-                setTimeout(() => {
-                    if (this.subNavOpen) {
-                        return;
-                    }
+                requestAnimationFrame(() => {
                     if (!submenu.contains(document.activeElement)) {
-                        this.focusRestoreEls?.pop()?.focus();
+                        this.focusRestoreEl?.focus();
                         this.hideMenu();
                         window.removeEventListener('focusout', focusRestore);
                     }
-                }, 1);
+                });
             };
             var menuArrowKeysNavigation = (e) => {
                 if (e.code == 'Escape') {
                     this.hideMenu();
-                    this.focusRestoreEls[0]?.focus();
-                    this.focusRestoreEls = [];
+                    this.focusRestoreEl?.focus();
                     window.removeEventListener('keyup', menuArrowKeysNavigation);
                 }
             };
@@ -556,7 +547,6 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
     ,initSubPopper: function () {
         var buttons = document.querySelectorAll('#modx-header .sub, #modx-footer .sub');
         var position = window.innerWidth <= 960 ? 'bottom' : 'right';
-        var _this = this;
         for (var i = 0; i < buttons.length; i++) {
             let popperInstance = null;
 
@@ -599,17 +589,14 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             }
 
             function show(button) {
-                var menu = button.getElementsByTagName('ul')[0];
+                var submenu = button.getElementsByTagName('ul')[0];
                 button.classList.add('active');
-                menu.classList.add('active');
-                _this.focusRestoreEls.push(button.querySelectorAll('a')[0]);
-                _this.subNavOpen = true;
-                create(button, menu);
+                submenu.classList.add('active');
+                create(button, submenu);
                 var focusRestore = (e) => {
                     requestAnimationFrame(() => {
-                        if (!menu.contains(document.activeElement)) {
-                            _this.focusRestoreEls?.pop()?.parentNode?.nextSibling?.focus();
-                            hide(button);
+                        if (!submenu.contains(document.activeElement)) {
+                            submenu.classList.remove('active');
                             window.removeEventListener('focusout', focusRestore);
                         }
                     });
@@ -627,7 +614,6 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                     submenu.removeAttribute('style');
                     buttons[i].classList.remove('active');
                 }
-                _this.subNavOpen = false;
                 destroy();
             }
             buttons[i].addEventListener('mouseenter', function (e) {
@@ -636,7 +622,9 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             });
             buttons[i].querySelectorAll('a')[0].addEventListener('focus', function (e) {
                 e.stopPropagation();
-                show(this.parentNode);
+                requestAnimationFrame(() => {
+                    show(this.parentNode);
+                });
             });
             buttons[i].addEventListener('mouseleave', function (e) {
                 e.stopPropagation();
