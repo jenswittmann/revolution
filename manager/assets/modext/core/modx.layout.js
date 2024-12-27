@@ -516,7 +516,11 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             this.hideMenu();
             submenu.classList.add('active');
             setTimeout(() => {
-                submenu.querySelectorAll('a')[0].focus();
+                var firstFocusEl = submenu.querySelectorAll('a')[0];
+                if (!firstFocusEl) {
+                    return;
+                }
+                firstFocusEl.focus();
             }, 50);
             var focusRestore = (e) => {
                 setTimeout(() => {
