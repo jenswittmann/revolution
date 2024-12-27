@@ -62,7 +62,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
     ,splitBarMargin: 8
 
     /**
-     * @property {Object} focusRestoreEl - Set Focus back on the this Element
+     * @property {Object} focusRestoreEl - Set Focus back on this Element
      */
     ,focusRestoreEl: []
 
