@@ -509,6 +509,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             submenu.classList.remove('active');
         } else {
             this.hideMenu();
+            var isClick = false;
             submenu.classList.add('active');
             setTimeout(() => {
                 var firstFocusEl = submenu.querySelectorAll('a')[0];
@@ -517,10 +518,16 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                 }
                 firstFocusEl.focus();
             }, 50);
+            var menuItemClicked = (e) => {
+                isClick = true;
+                window.removeEventListener('click', menuItemClicked);
+            };
             var focusRestore = (e) => {
                 requestAnimationFrame(() => {
                     if (!submenu.contains(document.activeElement)) {
-                        this.focusRestoreEl?.focus();
+                        if (!isClick) {
+                            this.focusRestoreEl?.focus();
+                        }
                         this.hideMenu();
                         window.removeEventListener('focusout', focusRestore);
                     }
@@ -533,6 +540,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                     window.removeEventListener('keyup', menuArrowKeysNavigation);
                 }
             };
+            window.addEventListener('click', menuItemClicked);
             window.addEventListener('focusout', focusRestore);
             window.addEventListener('keyup', menuArrowKeysNavigation);
         }
